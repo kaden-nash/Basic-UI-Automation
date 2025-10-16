@@ -1,3 +1,9 @@
+# My additions:
+.vscode/
+.vscode
+.qodo/
+.qodo
+
 # Prerequisites
 *.d
 
