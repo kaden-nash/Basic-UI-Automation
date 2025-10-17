@@ -2,6 +2,7 @@
 #include <string>
 #include <map>
 
+namespace KeystrokeAutomation {
     std::map<std::string, WORD> virtualKeyMap = {
         {"lmouse", VK_LBUTTON},
         {"rmouse", VK_RBUTTON},
@@ -123,3 +124,4 @@
         {"8", '8'},
         {"9", '9'}
     };
+}
