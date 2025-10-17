@@ -18,7 +18,4 @@ namespace WindowsManip {
     */
     void getChildWindows(windowInfo_s *childInfo, HWND hwnd);
 
-    BOOL CALLBACK EnumWindowsProc(HWND hwnd, LPARAM lParam);
-
-    BOOL CALLBACK EnumChildProc(HWND hwnd, LPARAM lParam);
 }
