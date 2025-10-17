@@ -4,5 +4,5 @@
 
 namespace Mouse {
     int moveMouse(int x, int y);
-    POINT getCursorPtr();
+    POINT getCursorPos();
 }

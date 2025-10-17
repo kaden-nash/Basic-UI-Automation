@@ -1,7 +1,6 @@
 #include "..\..\include\Mouse.h"
 #include <iostream>
 
-// TODO: Find out which headers this info is in to reduce size of import
 #include <windows.h>
 #include <winuser.h>
 
@@ -16,7 +15,7 @@ namespace Mouse {
     */ 
     int moveMouse(int x, int y)
     {
-        UINT successfulInputs = SetCursorPos(x, y);
+        UINT successfulInputs = SetCursorPos(x, y); // remember coords are relative to top left corner
 
         if (successfulInputs == 0)
         {
@@ -32,7 +31,7 @@ namespace Mouse {
     --param: none
     --return: a POINT structure containing the relative position of the mouse.
     */
-    POINT getCursorPtr()
+    POINT getCursorPos()
     {
         POINT p;
         GetCursorPos(&p);
