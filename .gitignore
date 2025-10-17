@@ -3,6 +3,8 @@
 .vscode
 .qodo/
 .qodo
+build/
+build
 
 # Prerequisites
 *.d
