@@ -1,12 +1,5 @@
-#include "WindowsManip.h"
+#include "..\..\include\WindowsManip.h"
 #include <iostream>
-
-
-namespace {
-    BOOL CALLBACK EnumWindowsProc(HWND hwnd, LPARAM lParam);
-
-    BOOL CALLBACK EnumChildProc(HWND hwnd, LPARAM lParam);
-}
 
 namespace WindowsManip {
     using std::cout;

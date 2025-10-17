@@ -1,4 +1,4 @@
-#include "Mouse.h"
+#include "..\..\include\Mouse.h"
 #include <iostream>
 
 // TODO: Find out which headers this info is in to reduce size of import
