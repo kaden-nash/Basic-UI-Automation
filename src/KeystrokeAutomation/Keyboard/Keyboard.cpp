@@ -1,4 +1,4 @@
-#include "..\..\include\Keyboard.h"
+#include "..\..\..\include\Keyboard.h"
 #include <windows.h>
 #include <vector>
 #include <iostream>
@@ -7,6 +7,7 @@
 namespace KeystrokeAutomation::Keyboard {
     using std::cout;
     using std::endl;
+    using std::vector;
 
 
 
@@ -14,7 +15,6 @@ namespace KeystrokeAutomation::Keyboard {
     Performs a set of keyboard events
     --param: takes in a vector of strings where each string represents an input or a combination of inputs (up to 3 presses at once). 
     --return: returns boolean int value indicating success or failure of input
-    NOTE: The letters in the WORD vector must be capitalized for the function to recognize them as the desired key. 
     */
     void kEvent(vector<WORD> input) {
         int delay = 50;

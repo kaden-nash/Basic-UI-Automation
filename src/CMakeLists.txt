@@ -1,3 +1,2 @@
-add_subdirectory(Keyboard)
-add_subdirectory(Mouse)
+add_subdirectory(KeystrokeAutomation)
 add_subdirectory(WindowManip)

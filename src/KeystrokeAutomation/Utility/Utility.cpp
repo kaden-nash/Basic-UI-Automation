@@ -1,9 +1,27 @@
 #include <windows.h>
 #include <string>
 #include <map>
+#include <stdexcept>
+#include <iostream>
 
-namespace KeystrokeAutomation {
-    std::map<std::string, WORD> virtualKeyMap = {
+namespace KeystrokeAutomation::Utility {
+    using std::map;
+    using std::string;
+    using std::endl;
+    using std::cout;
+
+    WORD getVirtualKey(string& alias) {
+        try {
+            virtualKeyMap.at(alias);
+            return virtualKeyMap[alias];
+        } catch (const std::out_of_range& e) {
+            cout << "No such alias exists!" << endl;
+        }
+    }
+
+    // TODO: Should tolower the input
+    // NOTE: If the user wants to capitalize a letter, use shift first
+    map<string, WORD> virtualKeyMap = {
         {"lmouse", VK_LBUTTON},
         {"rmouse", VK_RBUTTON},
         {"mmouse", VK_MBUTTON},
