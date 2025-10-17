@@ -1,14 +1,18 @@
-# set(TESTING_FILES,
-#     # some files which I will test
-# )
+set(TESTING_FILES
+    tests_main.cpp
+    test_Mouse.cpp
+    test_Keyboard.cpp
+)
 
-# add_executable(MyTests, 
-#     ${TESTING_FILES}
-# )
+add_executable(Tests ${TESTING_FILES})
 
-# # link your test executable against Catch2::Catch2 and your projects libraries
-# target_link_libraries()
+target_link_libraries(Tests PRIVATE 
+    Keyboard 
+    Mouse 
+    WindowsManip
+)
 
-# target_include_directories(MyTests PRIVATE ${CMAKE_SOURCE_DIR}/include)
+target_include_directories(Tests PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
-# add_test(NAME MyProjectTests COMMAND MyTests)
+add_test(NAME TestMouse COMMAND Tests)
+add_test(NAME TestKeyboard COMMAND Tests)
