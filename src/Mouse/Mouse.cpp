@@ -4,7 +4,7 @@
 #include <windows.h>
 #include <winuser.h>
 
-namespace Mouse {
+namespace KeystrokeAutomation::Mouse {
     using std::cout;
     using std::endl;
 

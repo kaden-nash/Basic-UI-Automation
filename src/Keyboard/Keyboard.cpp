@@ -4,9 +4,11 @@
 #include <iostream>
 
 
-namespace Keyboard {
+namespace KeystrokeAutomation::Keyboard {
     using std::cout;
     using std::endl;
+
+
 
     /* 
     Performs a set of keyboard events

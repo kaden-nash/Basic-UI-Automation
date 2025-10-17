@@ -2,7 +2,7 @@
 
 #include <windows.h>
 
-namespace Mouse {
+namespace KeystrokeAutomation::Mouse {
     int moveMouse(int x, int y);
     POINT getCursorPos();
 }

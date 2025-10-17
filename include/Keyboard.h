@@ -3,7 +3,7 @@
 #include <windows.h>
 #include <vector>
 
-namespace Keyboard {
+namespace KeystrokeAutomation::Keyboard {
     using std::vector;
     
     void kEvent(vector<WORD> input);
