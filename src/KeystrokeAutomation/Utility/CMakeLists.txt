@@ -1,3 +1,7 @@
-add_library(Utility Utility.cpp)
+add_subdirectory(VirtualKeys)
 
-target_include_directories(Utility PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+add_library(KeystrokeAutomation-Utility INTERFACE)
+
+target_link_libraries(KeystrokeAutomation-Utility INTERFACE 
+    KeystrokeAutomation-Utility-VirtualKeys
+)

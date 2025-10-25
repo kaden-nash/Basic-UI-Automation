@@ -7,12 +7,10 @@ set(TESTING_FILES
 add_executable(Tests ${TESTING_FILES})
 
 target_link_libraries(Tests PRIVATE 
-    Keyboard 
-    Mouse 
+    KeystrokeAutomation-ButtonPress
+    KeystrokeAutomation-Mouse 
     WindowsManip
 )
-
-target_include_directories(Tests PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
 add_test(NAME TestMouse COMMAND Tests)
 add_test(NAME TestKeyboard COMMAND Tests)

@@ -1,0 +1,3 @@
+add_library(KeystrokeAutomation-Utility-VirtualKeys VirtualKeys.cpp)
+
+target_include_directories(KeystrokeAutomation-Utility-VirtualKeys PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

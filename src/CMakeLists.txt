@@ -1,2 +1,10 @@
 add_subdirectory(KeystrokeAutomation)
-add_subdirectory(WindowManip)
+add_subdirectory(WindowsManip)
+add_subdirectory(Utility)
+
+add_library(CoreLib INTERFACE)
+
+target_link_libraries(CoreLib INTERFACE 
+    KeystrokeAutomation
+    WindowsManip
+)
