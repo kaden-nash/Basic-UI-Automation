@@ -4,19 +4,24 @@
 #include <stdexcept>
 #include <iostream>
 
-namespace KeystrokeAutomation::Utility {
+namespace KeystrokeAutomation::Utility::VirtualKeys {
     using std::map;
     using std::string;
     using std::endl;
     using std::cout;
 
-    WORD getVirtualKey(string& alias) {
+    WORD getVirtualKey(const string& alias) {
         try {
             virtualKeyMap.at(alias);
             return virtualKeyMap[alias];
         } catch (const std::out_of_range& e) {
-            cout << "No such alias exists!" << endl;
+            throw std::invalid_argument("No entry matching key found in virtualKeyMap.");
         }
+    }
+
+    bool isMouseRequest(const string& alias) {
+        WORD vKey = getVirtualKey(alias);
+        return vKey == VK_LBUTTON || vKey == VK_RBUTTON || vKey == VK_MBUTTON;
     }
 
     // TODO: Should tolower the input
@@ -25,8 +30,8 @@ namespace KeystrokeAutomation::Utility {
         {"lmouse", VK_LBUTTON},
         {"rmouse", VK_RBUTTON},
         {"mmouse", VK_MBUTTON},
-        {"xmouse1", VK_XBUTTON1},
-        {"xmouse2", VK_XBUTTON2},
+        // {"xmouse1", VK_XBUTTON1},
+        // {"xmouse2", VK_XBUTTON2},
 
         {"enter", VK_RETURN},
         {"space", VK_SPACE},
@@ -94,8 +99,8 @@ namespace KeystrokeAutomation::Utility {
         {"num8", VK_NUMPAD8},
         {"num9", VK_NUMPAD9},
         {"add", VK_ADD},
-        {"sub", VK_SUBTRACT},
-        {"mul", VK_MULTIPLY},
+        // {"sub", VK_SUBTRACT}, // assigned to a Razer Cortex Marco on my pc. Don't want to simulate this one - ever.
+        // {"mul", VK_MULTIPLY}, ^
         {"div", VK_DIVIDE},
         {"numdec", VK_DECIMAL},
         {"numlock", VK_NUMLOCK},
@@ -142,4 +147,5 @@ namespace KeystrokeAutomation::Utility {
         {"8", '8'},
         {"9", '9'}
     };
+
 }
