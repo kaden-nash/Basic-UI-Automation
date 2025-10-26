@@ -1,5 +1,6 @@
 #include "..\Utility\VirtualKeys\VirtualKeys.h"
 #include "..\..\Utility\StringManip\StringManip.h"
+#include "ButtonPressHelpers.h"
 #include <windows.h>
 #include <vector>
 #include <iostream>
@@ -16,6 +17,82 @@ namespace KeystrokeAutomation::ButtonPressHelpers {
     using ::Utility::StringManip::stripWhitespace;
     using ::Utility::StringManip::toLower;
     using ::Utility::StringManip::split;
+
+    namespace {
+        INPUT createINPUTForLeftClick() {
+            INPUT input = {};
+            input.type = INPUT_MOUSE;
+            input.ki.dwFlags = MOUSEEVENTF_LEFTDOWN;
+            return input;
+        }
+
+        INPUT createINPUTForLeftRelease() {
+            INPUT input = {};
+            input.type = INPUT_MOUSE;
+            input.ki.dwFlags = MOUSEEVENTF_LEFTUP;
+            return input;
+        }
+
+        INPUT createINPUTForRightClick() {
+            INPUT input = {};
+            input.type = INPUT_MOUSE;
+            input.ki.dwFlags = MOUSEEVENTF_RIGHTDOWN;
+            return input;
+        }
+
+        INPUT createINPUTForRightRelease() {
+            INPUT input = {};
+            input.type = INPUT_MOUSE;
+            input.ki.dwFlags = MOUSEEVENTF_RIGHTUP;
+            return input;
+        }
+
+        INPUT createINPUTForMiddleClick() {
+            INPUT input = {};
+            input.type = INPUT_MOUSE;
+            input.ki.dwFlags = MOUSEEVENTF_MIDDLEDOWN;
+            return input;
+        }
+
+        INPUT createINPUTForMiddleRelease() {
+            INPUT input = {};
+            input.type = INPUT_MOUSE;
+            input.ki.dwFlags = MOUSEEVENTF_MIDDLEUP;
+            return input;
+        }
+
+        INPUT createINPUTForPress(char ltr) {
+            INPUT input = {};
+            input.type = INPUT_KEYBOARD;
+            input.ki.wScan = ltr;
+            input.ki.dwFlags = KEYEVENTF_UNICODE;
+            return input;
+        }
+
+        INPUT createINPUTForPress(WORD vKey) {
+            INPUT input = {};
+            input.type = INPUT_KEYBOARD;
+            input.ki.wScan = vKey;
+            input.ki.dwFlags = 0;
+            return input;
+        }
+
+        INPUT createINPUTForRelease(char ltr) {
+            INPUT input = {};
+            input.type = INPUT_KEYBOARD;
+            input.ki.wScan = ltr;
+            input.ki.dwFlags = KEYEVENTF_UNICODE | KEYEVENTF_KEYUP;
+            return input;
+        }
+
+        INPUT createINPUTForRelease(WORD vKey) {
+            INPUT input = {};
+            input.type = INPUT_KEYBOARD;
+            input.ki.wScan = vKey;
+            input.ki.dwFlags = KEYEVENTF_KEYUP;
+            return input;
+        }
+    }
 
     vector<INPUT> getINPUTs(const string& inputStr) {
         string strippedInput = stripWhitespace(inputStr);
@@ -130,7 +207,6 @@ namespace KeystrokeAutomation::ButtonPressHelpers {
     vector<INPUT> createINPUTForPrintableVKeys(const string& letters) {
         string strippedLetters = removeLeadingAndTrailingQuotations(letters);
         vector<INPUT> inputs = {};
-        vector<INPUT> inputs = {};
         for (int i = 0; i < strippedLetters.size(); ++i) {
             inputs.push_back(createINPUTForPress(strippedLetters[i]));
             inputs.push_back(createINPUTForRelease(strippedLetters[i]));
@@ -146,79 +222,4 @@ namespace KeystrokeAutomation::ButtonPressHelpers {
         return inputs;
     }
 
-    namespace {
-        INPUT createINPUTForLeftClick() {
-            INPUT input = {};
-            input.type = INPUT_MOUSE;
-            input.ki.dwFlags = MOUSEEVENTF_LEFTDOWN;
-            return input;
-        }
-
-        INPUT createINPUTForLeftRelease() {
-            INPUT input = {};
-            input.type = INPUT_MOUSE;
-            input.ki.dwFlags = MOUSEEVENTF_LEFTUP;
-            return input;
-        }
-
-        INPUT createINPUTForRightClick() {
-            INPUT input = {};
-            input.type = INPUT_MOUSE;
-            input.ki.dwFlags = MOUSEEVENTF_RIGHTDOWN;
-            return input;
-        }
-
-        INPUT createINPUTForRightRelease() {
-            INPUT input = {};
-            input.type = INPUT_MOUSE;
-            input.ki.dwFlags = MOUSEEVENTF_RIGHTUP;
-            return input;
-        }
-
-        INPUT createINPUTForMiddleClick() {
-            INPUT input = {};
-            input.type = INPUT_MOUSE;
-            input.ki.dwFlags = MOUSEEVENTF_MIDDLEDOWN;
-            return input;
-        }
-
-        INPUT createINPUTForMiddleRelease() {
-            INPUT input = {};
-            input.type = INPUT_MOUSE;
-            input.ki.dwFlags = MOUSEEVENTF_MIDDLEUP;
-            return input;
-        }
-
-        INPUT createINPUTForPress(char ltr) {
-            INPUT input = {};
-            input.type = INPUT_KEYBOARD;
-            input.ki.wScan = ltr;
-            input.ki.dwFlags = KEYEVENTF_UNICODE;
-            return input;
-        }
-
-        INPUT createINPUTForPress(WORD vKey) {
-            INPUT input = {};
-            input.type = INPUT_KEYBOARD;
-            input.ki.wScan = vKey;
-            input.ki.dwFlags = 0;
-            return input;
-        }
-
-        INPUT createINPUTForRelease(char ltr) {
-            INPUT input = {};
-            input.type = INPUT_KEYBOARD;
-            input.ki.wScan = ltr;
-            input.ki.dwFlags = KEYEVENTF_UNICODE | KEYEVENTF_KEYUP;
-            return input;
-        }
-
-        INPUT createINPUTForRelease(WORD vKey) {
-            INPUT input = {};
-            input.type = INPUT_KEYBOARD;
-            input.ki.wScan = vKey;
-            input.ki.dwFlags = KEYEVENTF_KEYUP;
-            return input;
-        }
-    }
 }

@@ -1,3 +1,4 @@
+#include "StringManip.h"
 #include <string>
 #include <vector>
 #include <algorithm>

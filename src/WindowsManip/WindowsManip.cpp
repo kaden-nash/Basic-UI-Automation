@@ -1,6 +1,8 @@
 #include "..\..\include\WindowsManip.h"
 #include <iostream>
 
+/*
+
 namespace WindowsManip {
     using std::cout;
     using std::endl;
@@ -79,3 +81,4 @@ namespace WindowsManip {
         }
     }
 }
+*/

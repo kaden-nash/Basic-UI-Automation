@@ -1,16 +1,19 @@
 set(TESTING_FILES
     tests_main.cpp
     test_Mouse.cpp
-    test_Keyboard.cpp
+    test_ButtonPress.cpp
+    test_ButtonPressHelpers.cpp 
+    test_Utility-StringManip.cpp
 )
 
 add_executable(Tests ${TESTING_FILES})
 
 target_link_libraries(Tests PRIVATE 
+    KeystrokeAutomation-ButtonPressHelpers
     KeystrokeAutomation-ButtonPress
     KeystrokeAutomation-Mouse 
-    WindowsManip
+    Utility-StringManip
 )
 
 add_test(NAME TestMouse COMMAND Tests)
-add_test(NAME TestKeyboard COMMAND Tests)
+add_test(NAME TestButtonPress COMMAND Tests)
