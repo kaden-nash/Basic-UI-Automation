@@ -22,42 +22,42 @@ namespace KeystrokeAutomation::ButtonPressHelpers {
         INPUT createINPUTForLeftClick() {
             INPUT input = {};
             input.type = INPUT_MOUSE;
-            input.ki.dwFlags = MOUSEEVENTF_LEFTDOWN;
+            input.mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
             return input;
         }
 
         INPUT createINPUTForLeftRelease() {
             INPUT input = {};
             input.type = INPUT_MOUSE;
-            input.ki.dwFlags = MOUSEEVENTF_LEFTUP;
+            input.mi.dwFlags = MOUSEEVENTF_LEFTUP;
             return input;
         }
 
         INPUT createINPUTForRightClick() {
             INPUT input = {};
             input.type = INPUT_MOUSE;
-            input.ki.dwFlags = MOUSEEVENTF_RIGHTDOWN;
+            input.mi.dwFlags = MOUSEEVENTF_RIGHTDOWN;
             return input;
         }
 
         INPUT createINPUTForRightRelease() {
             INPUT input = {};
             input.type = INPUT_MOUSE;
-            input.ki.dwFlags = MOUSEEVENTF_RIGHTUP;
+            input.mi.dwFlags = MOUSEEVENTF_RIGHTUP;
             return input;
         }
 
         INPUT createINPUTForMiddleClick() {
             INPUT input = {};
             input.type = INPUT_MOUSE;
-            input.ki.dwFlags = MOUSEEVENTF_MIDDLEDOWN;
+            input.mi.dwFlags = MOUSEEVENTF_MIDDLEDOWN;
             return input;
         }
 
         INPUT createINPUTForMiddleRelease() {
             INPUT input = {};
             input.type = INPUT_MOUSE;
-            input.ki.dwFlags = MOUSEEVENTF_MIDDLEUP;
+            input.mi.dwFlags = MOUSEEVENTF_MIDDLEUP;
             return input;
         }
 
@@ -72,7 +72,7 @@ namespace KeystrokeAutomation::ButtonPressHelpers {
         INPUT createINPUTForPress(WORD vKey) {
             INPUT input = {};
             input.type = INPUT_KEYBOARD;
-            input.ki.wScan = vKey;
+            input.ki.wVk = vKey;
             input.ki.dwFlags = 0;
             return input;
         }
@@ -88,7 +88,7 @@ namespace KeystrokeAutomation::ButtonPressHelpers {
         INPUT createINPUTForRelease(WORD vKey) {
             INPUT input = {};
             input.type = INPUT_KEYBOARD;
-            input.ki.wScan = vKey;
+            input.ki.wVk = vKey;
             input.ki.dwFlags = KEYEVENTF_KEYUP;
             return input;
         }
@@ -103,9 +103,9 @@ namespace KeystrokeAutomation::ButtonPressHelpers {
     void throwSendInputsError(int inputsSent, int desiredInputsSent) {
         string errorMsg = "";
         errorMsg += "Not all inputs were sent (";
-        errorMsg += desiredInputsSent;
+        errorMsg += std::to_string(inputsSent);
         errorMsg += "/";
-        errorMsg += inputsSent;
+        errorMsg += std::to_string(desiredInputsSent);
         errorMsg += ")";
         throw std::runtime_error(errorMsg);
     }
@@ -162,9 +162,8 @@ namespace KeystrokeAutomation::ButtonPressHelpers {
     }
 
     vector<INPUT> createINPUTForCompoundCommand(const string& command) {
-        vector<INPUT> inputs = {};
         vector<string> splitCommand = split(command, "|");
-        vector<INPUT> newInputs = createINPUTForHoldingPresses(splitCommand);
+        vector<INPUT> inputs = createINPUTForHoldingPresses(splitCommand);
         return inputs;
     }
 
@@ -177,6 +176,7 @@ namespace KeystrokeAutomation::ButtonPressHelpers {
         }
 
         for(int i = 0; i < aliases.size(); ++i) {
+            vKey = attemptToGetVKey(aliases[i]);
             input.push_back(createINPUTForRelease(vKey));
         }
 
@@ -190,8 +190,7 @@ namespace KeystrokeAutomation::ButtonPressHelpers {
         try {
             vKey = getVirtualKey(lower);
         } catch (const std::invalid_argument) {
-            cout << "Invalid input: " << alias << " - terminating.\n";
-            exit(0);
+            std::throw_with_nested(std::runtime_error("Invalid input."));
         }
 
         return vKey;

@@ -25,6 +25,12 @@ namespace Utility::StringManip {
 
     vector<string> split(const string& s, const string& delim) {
         vector<string> result;
+
+        if (delim.empty()) {
+            result.push_back(s);
+            return result;
+        }
+
         size_t start = 0;
         size_t end = s.find(delim);
 
@@ -38,4 +44,4 @@ namespace Utility::StringManip {
         result.push_back(s.substr(start));
         return result;
     }
-    }
+}
