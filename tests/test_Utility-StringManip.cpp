@@ -14,3 +14,30 @@ TEST_CASE("toLower") {
         REQUIRE(Utility::StringManip::toLower(testStr) == resStr);
     }
 }
+
+TEST_CASE("stripWhitespace") {
+    std::string testStr = "THE QUICK BROWN FOX jumped over the lazy dog.";
+    std::string resStr = "THEQUICKBROWNFOXjumpedoverthelazydog.";
+
+    SECTION("empty string") {
+        REQUIRE(Utility::StringManip::stripWhitespace("") == "");
+    }
+
+    SECTION("filled string") {
+        REQUIRE(Utility::StringManip::stripWhitespace(testStr) == resStr);
+    }
+}
+
+TEST_CASE("split") {
+    std::string testStr = "THE QUICK BROWN FOX jumped over the lazy dog.";
+    std::vector<std::string> vec1 = {""};
+    std::vector<std::string> vec2 = {"THE", "QUICK", "BROWN", "FOX", "jumped", "over", "the", "lazy", "dog."};
+
+    SECTION("empty string") {
+        REQUIRE(Utility::StringManip::split("", "") == vec1);
+    }
+
+    SECTION("filled string") {
+        REQUIRE(Utility::StringManip::split(testStr, " ") == vec2);
+    }
+}
