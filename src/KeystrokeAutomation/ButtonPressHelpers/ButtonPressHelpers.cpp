@@ -13,12 +13,21 @@ namespace KeystrokeAutomation::ButtonPressHelpers {
     using std::vector;
     using std::string;
     using Utility::VirtualKeys::getVirtualKey;
-    using Utility::VirtualKeys::isMouseRequest;
+    using Utility::VirtualKeys::isMouseClickRequest;
     using ::Utility::StringManip::stripWhitespace;
     using ::Utility::StringManip::toLower;
     using ::Utility::StringManip::split;
 
     namespace {
+        INPUT createINPUTForMouseMove(int x, int y) {
+            INPUT input = {};
+            input.type = INPUT_MOUSE;
+            input.mi.dx = x;
+            input.mi.dy = y;
+            input.mi.dwFlags = MOUSEEVENTF_ABSOLUTE;
+            return input;
+        }
+        
         INPUT createINPUTForLeftClick() {
             INPUT input = {};
             input.type = INPUT_MOUSE;
@@ -114,8 +123,10 @@ namespace KeystrokeAutomation::ButtonPressHelpers {
         vector<INPUT> inputs = {};
         vector<INPUT> newInputs = {};
         for (int i = 0; i < splitInput.size(); ++i) {
-            if (isMouseRequest(splitInput[i])) {
-                newInputs = createINPUTForMouse(splitInput[i]);
+            if (isMouseClickRequest(splitInput[i])) {
+                newInputs = createINPUTForMouseClick(splitInput[i]);
+            } else if (isMouseMoveRequest(splitInput[i])) {
+                newInputs = createINPUTForMouseMove(splitInput[i]);
             } else if (isPrintableVKey(splitInput[i])) {
                 newInputs = createINPUTForPrintableVKeys(splitInput[i]);
             } else if (isCompoundCommand(splitInput[i])) {
@@ -134,14 +145,14 @@ namespace KeystrokeAutomation::ButtonPressHelpers {
     }
 
     bool isPrintableVKey(const string& str) {
-        if (str[0] == '\"' && str[str.size() - 1] == '\"') {
-            return true;
-        }
-
-        return false;
+        return str[0] == '\"' && str[str.size() - 1] == '\"';
     }
 
-    vector<INPUT> createINPUTForMouse(const string& alias) {
+    bool isMouseMoveRequest(const string& str) {
+        return str[0] == '(' && str[str.size() - 1] == ')';
+    }
+
+    vector<INPUT> createINPUTForMouseClick(const string& alias) {
         WORD vKey = attemptToGetVKey(alias);
         vector<INPUT> inputs = {};
         switch(vKey) {
@@ -159,6 +170,16 @@ namespace KeystrokeAutomation::ButtonPressHelpers {
                 break;
         }
         return inputs;
+    }
+
+    vector<INPUT> createINPUTForMouseMove(const string& coords) {
+        string noBrackets = removeLeadingAndTrailingChars(coords);
+        vector<string> coords_vec = split(noBrackets, "|");
+        int x = std::stoi(coords_vec[0]);
+        int y = std::stoi(coords_vec[1]);
+        vector<INPUT> input = {};
+        input.push_back(createINPUTForMouseMove(x, y));
+        return input;
     }
 
     vector<INPUT> createINPUTForCompoundCommand(const string& command) {
@@ -196,7 +217,7 @@ namespace KeystrokeAutomation::ButtonPressHelpers {
         return vKey;
     }
 
-    string removeLeadingAndTrailingQuotations(const string& str) {
+    string removeLeadingAndTrailingChars(const string& str) {
         string copy = str;
         copy.erase(0, 1);
         copy.erase(copy.size()-1, 1);
@@ -204,7 +225,7 @@ namespace KeystrokeAutomation::ButtonPressHelpers {
     }
 
     vector<INPUT> createINPUTForPrintableVKeys(const string& letters) {
-        string strippedLetters = removeLeadingAndTrailingQuotations(letters);
+        string strippedLetters = removeLeadingAndTrailingChars(letters);
         vector<INPUT> inputs = {};
         for (int i = 0; i < strippedLetters.size(); ++i) {
             inputs.push_back(createINPUTForPress(strippedLetters[i]));

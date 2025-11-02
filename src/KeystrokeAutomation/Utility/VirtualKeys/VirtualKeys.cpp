@@ -144,7 +144,7 @@ namespace KeystrokeAutomation::Utility::VirtualKeys {
         }
     }
 
-    bool isMouseRequest(const string& alias) {
+    bool isMouseClickRequest(const string& alias) {
         WORD vKey;
         try {
             vKey = getVirtualKey(alias);

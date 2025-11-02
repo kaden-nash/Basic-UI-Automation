@@ -15,7 +15,7 @@ namespace KeystrokeAutomation::ButtonPressHelpers {
     vector<INPUT> createINPUTForCompoundCommand(const string& command);
     vector<INPUT> createINPUTForHoldingPresses(vector<string>& aliases);
     WORD attemptToGetVKey(const string& alias);
-    string removeLeadingAndTrailingQuotations(const string& str);
+    string removeLeadingAndTrailingChars(const string& str);
     vector<INPUT> createINPUTForPrintableVKeys(const string& letters);
     vector<INPUT> createINPUTForUnprintableVKey(const string& alias);
 }
