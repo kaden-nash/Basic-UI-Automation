@@ -4,6 +4,7 @@
 #include <windows.h>
 #include <vector>
 #include <iostream>
+#include <sstream>
 #include <algorithm>
 #include <stdexcept>
 
@@ -19,7 +20,7 @@ namespace KeystrokeAutomation::ButtonPressHelpers {
     using ::Utility::StringManip::split;
 
     namespace {
-        INPUT createINPUTForMouseMove(int x, int y) {
+        INPUT populateINPUTForMouseMove(int x, int y) {
             INPUT input = {};
             input.type = INPUT_MOUSE;
             input.mi.dx = x;
@@ -28,49 +29,49 @@ namespace KeystrokeAutomation::ButtonPressHelpers {
             return input;
         }
         
-        INPUT createINPUTForLeftClick() {
+        INPUT populateINPUTForLeftClick() {
             INPUT input = {};
             input.type = INPUT_MOUSE;
             input.mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
             return input;
         }
 
-        INPUT createINPUTForLeftRelease() {
+        INPUT populateINPUTForLeftRelease() {
             INPUT input = {};
             input.type = INPUT_MOUSE;
             input.mi.dwFlags = MOUSEEVENTF_LEFTUP;
             return input;
         }
 
-        INPUT createINPUTForRightClick() {
+        INPUT populateINPUTForRightClick() {
             INPUT input = {};
             input.type = INPUT_MOUSE;
             input.mi.dwFlags = MOUSEEVENTF_RIGHTDOWN;
             return input;
         }
 
-        INPUT createINPUTForRightRelease() {
+        INPUT populateINPUTForRightRelease() {
             INPUT input = {};
             input.type = INPUT_MOUSE;
             input.mi.dwFlags = MOUSEEVENTF_RIGHTUP;
             return input;
         }
 
-        INPUT createINPUTForMiddleClick() {
+        INPUT populateINPUTForMiddleClick() {
             INPUT input = {};
             input.type = INPUT_MOUSE;
             input.mi.dwFlags = MOUSEEVENTF_MIDDLEDOWN;
             return input;
         }
 
-        INPUT createINPUTForMiddleRelease() {
+        INPUT populateINPUTForMiddleRelease() {
             INPUT input = {};
             input.type = INPUT_MOUSE;
             input.mi.dwFlags = MOUSEEVENTF_MIDDLEUP;
             return input;
         }
 
-        INPUT createINPUTForPress(char ltr) {
+        INPUT populateINPUTForPress(char ltr) {
             INPUT input = {};
             input.type = INPUT_KEYBOARD;
             input.ki.wScan = ltr;
@@ -78,7 +79,7 @@ namespace KeystrokeAutomation::ButtonPressHelpers {
             return input;
         }
 
-        INPUT createINPUTForPress(WORD vKey) {
+        INPUT populateINPUTForPress(WORD vKey) {
             INPUT input = {};
             input.type = INPUT_KEYBOARD;
             input.ki.wVk = vKey;
@@ -86,7 +87,7 @@ namespace KeystrokeAutomation::ButtonPressHelpers {
             return input;
         }
 
-        INPUT createINPUTForRelease(char ltr) {
+        INPUT populateINPUTForRelease(char ltr) {
             INPUT input = {};
             input.type = INPUT_KEYBOARD;
             input.ki.wScan = ltr;
@@ -94,7 +95,7 @@ namespace KeystrokeAutomation::ButtonPressHelpers {
             return input;
         }
 
-        INPUT createINPUTForRelease(WORD vKey) {
+        INPUT populateINPUTForRelease(WORD vKey) {
             INPUT input = {};
             input.type = INPUT_KEYBOARD;
             input.ki.wVk = vKey;
@@ -103,20 +104,16 @@ namespace KeystrokeAutomation::ButtonPressHelpers {
         }
     }
 
+    void throwSendInputsError(int inputsSent, int desiredInputsSent) {
+        std::stringstream errorMsg;
+        errorMsg << "Not all inputs were sent (" << std::to_string(inputsSent) << "/" << std::to_string(desiredInputsSent) << ")";
+        throw std::runtime_error(errorMsg.str());
+    }
+
     vector<INPUT> getINPUTs(const string& inputStr) {
         string strippedInput = stripWhitespace(inputStr);
         vector<string> splitInput = split(strippedInput, ",");
         return createINPUTs(splitInput);
-    }
-
-    void throwSendInputsError(int inputsSent, int desiredInputsSent) {
-        string errorMsg = "";
-        errorMsg += "Not all inputs were sent (";
-        errorMsg += std::to_string(inputsSent);
-        errorMsg += "/";
-        errorMsg += std::to_string(desiredInputsSent);
-        errorMsg += ")";
-        throw std::runtime_error(errorMsg);
     }
 
     vector<INPUT> createINPUTs(vector<string>& splitInput) {
@@ -140,33 +137,22 @@ namespace KeystrokeAutomation::ButtonPressHelpers {
         return inputs;
     }
 
-    bool isCompoundCommand(const string& command) {
-        return command.find("|") != string::npos;
-    }
-
-    bool isPrintableVKey(const string& str) {
-        return str[0] == '\"' && str[str.size() - 1] == '\"';
-    }
-
-    bool isMouseMoveRequest(const string& str) {
-        return str[0] == '(' && str[str.size() - 1] == ')';
-    }
 
     vector<INPUT> createINPUTForMouseClick(const string& alias) {
         WORD vKey = attemptToGetVKey(alias);
         vector<INPUT> inputs = {};
         switch(vKey) {
             case VK_LBUTTON:
-                inputs.push_back(createINPUTForLeftClick());
-                inputs.push_back(createINPUTForLeftRelease());
+                inputs.push_back(populateINPUTForLeftClick());
+                inputs.push_back(populateINPUTForLeftRelease());
                 break;
             case VK_RBUTTON:
-                inputs.push_back(createINPUTForRightClick());
-                inputs.push_back(createINPUTForRightRelease());
+                inputs.push_back(populateINPUTForRightClick());
+                inputs.push_back(populateINPUTForRightRelease());
                 break;
             case VK_MBUTTON:
-                inputs.push_back(createINPUTForMiddleClick());
-                inputs.push_back(createINPUTForMiddleRelease());
+                inputs.push_back(populateINPUTForMiddleClick());
+                inputs.push_back(populateINPUTForMiddleRelease());
                 break;
         }
         return inputs;
@@ -178,7 +164,7 @@ namespace KeystrokeAutomation::ButtonPressHelpers {
         int x = std::stoi(coords_vec[0]);
         int y = std::stoi(coords_vec[1]);
         vector<INPUT> input = {};
-        input.push_back(createINPUTForMouseMove(x, y));
+        input.push_back(populateINPUTForMouseMove(x, y));
         return input;
     }
 
@@ -193,15 +179,34 @@ namespace KeystrokeAutomation::ButtonPressHelpers {
         WORD vKey;
         for(int i = 0; i < aliases.size(); ++i) {
             vKey = attemptToGetVKey(aliases[i]);
-            input.push_back(createINPUTForPress(vKey));
+            input.push_back(populateINPUTForPress(vKey));
         }
 
         for(int i = 0; i < aliases.size(); ++i) {
             vKey = attemptToGetVKey(aliases[i]);
-            input.push_back(createINPUTForRelease(vKey));
+            input.push_back(populateINPUTForRelease(vKey));
         }
 
         return input;
+    }
+
+
+    vector<INPUT> createINPUTForPrintableVKeys(const string& letters) {
+        string strippedLetters = removeLeadingAndTrailingChars(letters);
+        vector<INPUT> inputs = {};
+        for (int i = 0; i < strippedLetters.size(); ++i) {
+            inputs.push_back(populateINPUTForPress(strippedLetters[i]));
+            inputs.push_back(populateINPUTForRelease(strippedLetters[i]));
+        }
+        return inputs;
+    }
+
+    vector<INPUT> createINPUTForUnprintableVKey(const string& alias) {
+        vector<INPUT> inputs = {};
+        WORD vKey = attemptToGetVKey(alias);
+        inputs.push_back(populateINPUTForPress(vKey));
+        inputs.push_back(populateINPUTForRelease(vKey));
+        return inputs;
     }
 
     WORD attemptToGetVKey(const string& alias) {
@@ -223,23 +228,16 @@ namespace KeystrokeAutomation::ButtonPressHelpers {
         copy.erase(copy.size()-1, 1);
         return copy;
     }
-
-    vector<INPUT> createINPUTForPrintableVKeys(const string& letters) {
-        string strippedLetters = removeLeadingAndTrailingChars(letters);
-        vector<INPUT> inputs = {};
-        for (int i = 0; i < strippedLetters.size(); ++i) {
-            inputs.push_back(createINPUTForPress(strippedLetters[i]));
-            inputs.push_back(createINPUTForRelease(strippedLetters[i]));
-        }
-        return inputs;
+    
+    bool isCompoundCommand(const string& command) {
+        return command.find("|") != string::npos;
     }
 
-    vector<INPUT> createINPUTForUnprintableVKey(const string& alias) {
-        vector<INPUT> inputs = {};
-        WORD vKey = attemptToGetVKey(alias);
-        inputs.push_back(createINPUTForPress(vKey));
-        inputs.push_back(createINPUTForRelease(vKey));
-        return inputs;
+    bool isPrintableVKey(const string& str) {
+        return str[0] == '\"' && str[str.size() - 1] == '\"';
     }
 
+    bool isMouseMoveRequest(const string& str) {
+        return str[0] == '(' && str[str.size() - 1] == ')';
+    }
 }
