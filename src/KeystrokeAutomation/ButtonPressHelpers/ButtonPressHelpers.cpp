@@ -20,7 +20,16 @@ namespace KeystrokeAutomation::ButtonPressHelpers {
     using ::Utility::StringManip::split;
 
     namespace {
+        void isValidMouseMoveRange(int x, int y) {
+            std::stringstream errorMsg;
+            if (x > 65335 || x < 0 || y > 65535 || y < 0) {
+                errorMsg << "Mouse movement range must be between 0 and 65335 for both axes, was (" << x << ", " << y << ")"; 
+                throw std::invalid_argument(errorMsg.str());
+            }
+        }
+
         INPUT populateINPUTForMouseMove(int x, int y) {
+            isValidMouseMoveRange(x, y);
             INPUT input = {};
             input.type = INPUT_MOUSE;
             input.mi.dx = x;
@@ -28,6 +37,7 @@ namespace KeystrokeAutomation::ButtonPressHelpers {
             input.mi.dwFlags = MOUSEEVENTF_ABSOLUTE;
             return input;
         }
+
         
         INPUT populateINPUTForLeftClick() {
             INPUT input = {};

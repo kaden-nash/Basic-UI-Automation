@@ -38,10 +38,10 @@ TEST_CASE("Parsing Helper Functions", "[parser_helpers]") {
         REQUIRE(KeystrokeAutomation::ButtonPressHelpers::isPrintableVKey("") == false);
     }
 
-    SECTION("removeLeadingAndTrailingQuotations strips outer quotes") {
-        REQUIRE(KeystrokeAutomation::ButtonPressHelpers::removeLeadingAndTrailingQuotations("\"hello\"") == "hello");
-        REQUIRE(KeystrokeAutomation::ButtonPressHelpers::removeLeadingAndTrailingQuotations("\"a\"") == "a");
-        REQUIRE(KeystrokeAutomation::ButtonPressHelpers::removeLeadingAndTrailingQuotations("\"\"") == "");
+    SECTION("removeLeadingAndTrailingChars strips outer quotes") {
+        REQUIRE(KeystrokeAutomation::ButtonPressHelpers::removeLeadingAndTrailingChars("\"hello\"") == "hello");
+        REQUIRE(KeystrokeAutomation::ButtonPressHelpers::removeLeadingAndTrailingChars("\"a\"") == "a");
+        REQUIRE(KeystrokeAutomation::ButtonPressHelpers::removeLeadingAndTrailingChars("\"\"") == "");
     }
 }
 
@@ -67,15 +67,28 @@ TEST_CASE("Input Creation Logic", "[input_creation]") {
         REQUIRE(inputs[1].type == INPUT_KEYBOARD); 
     }
 
-    SECTION("createINPUTForMouse creates mouse and release pair") {
-        auto inputs = KeystrokeAutomation::ButtonPressHelpers::createINPUTForMouse("lmouse");
+    SECTION("createINPUTForMouseClick creates mouse and release pair") {
+        auto inputs = KeystrokeAutomation::ButtonPressHelpers::createINPUTForMouseClick("lmouse");
         REQUIRE(inputs.size() == 2);
         REQUIRE(inputs[0].type == INPUT_MOUSE); 
         REQUIRE(inputs[1].type == INPUT_MOUSE); 
 
-        auto rInputs = KeystrokeAutomation::ButtonPressHelpers::createINPUTForMouse("rmouse");
+        auto rInputs = KeystrokeAutomation::ButtonPressHelpers::createINPUTForMouseClick("rmouse");
         REQUIRE(rInputs.size() == 2);
         REQUIRE(rInputs[0].type == INPUT_MOUSE); 
+    }
+
+    SECTION("createINPUTForMouseMove creates mouse movement INPUT") {
+        auto inputs = KeystrokeAutomation::ButtonPressHelpers::createINPUTForMouseMove("(100|100)");
+        REQUIRE(inputs.size() == 1);
+        REQUIRE(inputs[0].type == INPUT_MOUSE); 
+        REQUIRE(inputs[0].mi.dx == 100); 
+        REQUIRE(inputs[0].mi.dy == 100); 
+        REQUIRE(inputs[0].mi.dwFlags == MOUSEEVENTF_ABSOLUTE); 
+
+        REQUIRE_THROWS_WITH(KeystrokeAutomation::ButtonPressHelpers::createINPUTForMouseMove("(0|-1)"), 
+        "Mouse movement range must be between 0 and 65335 for both axes, was (0, -1)"
+        );
     }
 
     SECTION("createINPUTForHoldingPresses") {
