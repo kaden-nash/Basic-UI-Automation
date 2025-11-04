@@ -2,7 +2,7 @@
 #include <string>
 #include <map>
 
-namespace KeystrokeAutomation::Utility::VirtualKeys {
+namespace KeystrokeAutomation {
     using std::string;
 
     WORD getVirtualKey(const string& alias);

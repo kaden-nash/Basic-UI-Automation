@@ -1,8 +1,0 @@
-# add Keyboard library with all files in this library
-add_library(KeystrokeAutomation-ButtonPress ButtonPress.cpp)
-
-target_link_libraries(KeystrokeAutomation-ButtonPress PRIVATE KeystrokeAutomation-Utility-VirtualKeys)
-target_link_libraries(KeystrokeAutomation-ButtonPress PRIVATE Utility-StringManip)
-target_link_libraries(KeystrokeAutomation-ButtonPress PRIVATE KeystrokeAutomation-ButtonPressHelpers)
-
-target_include_directories(KeystrokeAutomation-ButtonPress PUBLIC ${CMAKE_SOURCE_DIR}/include)

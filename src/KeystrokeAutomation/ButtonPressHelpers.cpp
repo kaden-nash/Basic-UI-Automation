@@ -1,5 +1,5 @@
-#include "..\Utility\VirtualKeys\VirtualKeys.h"
-#include "..\..\Utility\StringManip\StringManip.h"
+#include "VirtualKeys.h"
+#include "..\Utility\StringManip.h"
 #include "ButtonPressHelpers.h"
 #include <windows.h>
 #include <vector>
@@ -8,16 +8,16 @@
 #include <algorithm>
 #include <stdexcept>
 
-namespace KeystrokeAutomation::ButtonPressHelpers {
+namespace KeystrokeAutomation {
     using std::cout;
     using std::endl;
     using std::vector;
     using std::string;
-    using Utility::VirtualKeys::getVirtualKey;
-    using Utility::VirtualKeys::isMouseClickRequest;
-    using ::Utility::StringManip::stripWhitespace;
-    using ::Utility::StringManip::toLower;
-    using ::Utility::StringManip::split;
+    using KeystrokeAutomation::getVirtualKey;
+    using KeystrokeAutomation::isMouseClickRequest;
+    using ::Utility::stripWhitespace;
+    using ::Utility::toLower;
+    using ::Utility::split;
 
     namespace {
         void isValidMouseMoveRange(int x, int y) {

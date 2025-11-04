@@ -2,6 +2,6 @@
 
 #include <string>
 
-namespace KeystrokeAutomation::ButtonPress {
+namespace KeystrokeAutomation {
     void sendInputs(const std::string& input);
 }

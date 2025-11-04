@@ -1,14 +1,14 @@
-#include "..\..\..\include\ButtonPress.h"
-#include "..\ButtonPressHelpers\ButtonPressHelpers.h"
+#include "..\..\include\ButtonPress.h"
+#include "ButtonPressHelpers.h"
 #include <windows.h>
 #include <vector>
 #include <iostream>
 
-namespace KeystrokeAutomation::ButtonPress {
+namespace KeystrokeAutomation {
     using std::vector;
     using std::string;
-    using ButtonPressHelpers::getINPUTs;
-    using ButtonPressHelpers::throwSendInputsError;
+    using KeystrokeAutomation::getINPUTs;
+    using KeystrokeAutomation::throwSendInputsError;
 
     /*
     Performs a set of keyboard/mouse events

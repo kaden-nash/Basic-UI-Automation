@@ -3,7 +3,7 @@
 #include <vector>
 #include <algorithm>
 
-namespace Utility::StringManip {
+namespace Utility {
     using std::string;
     using std::vector;
 

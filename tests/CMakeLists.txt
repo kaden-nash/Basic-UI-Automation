@@ -9,10 +9,8 @@ set(TESTING_FILES
 add_executable(Tests ${TESTING_FILES})
 
 target_link_libraries(Tests PRIVATE 
-    KeystrokeAutomation-ButtonPressHelpers
-    KeystrokeAutomation-ButtonPress
-    KeystrokeAutomation-Mouse 
-    Utility-StringManip
+    KeystrokeAutomation
+    Utility
 )
 
 add_test(NAME TestMouse COMMAND Tests)

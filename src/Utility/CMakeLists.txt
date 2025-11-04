@@ -1,8 +1,4 @@
-add_subdirectory(StringManip)
-
-add_library(Utility INTERFACE)
-
-target_link_libraries(Utility INTERFACE 
-    Utility-StringManip
+add_library(Utility 
+    StringManip.cpp
 )
-
+target_include_directories(Utility PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

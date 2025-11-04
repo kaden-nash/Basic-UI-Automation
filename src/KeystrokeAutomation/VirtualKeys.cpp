@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include <iostream>
 
-namespace KeystrokeAutomation::Utility::VirtualKeys {
+namespace KeystrokeAutomation {
     using std::map;
     using std::string;
     using std::endl;

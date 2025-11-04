@@ -1,3 +1,0 @@
-add_library(KeystrokeAutomation-ButtonPressHelpers ButtonPressHelpers.cpp)
-
-target_include_directories(KeystrokeAutomation-ButtonPressHelpers PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

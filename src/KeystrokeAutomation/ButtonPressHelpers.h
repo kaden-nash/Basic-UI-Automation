@@ -2,7 +2,7 @@
 #include <vector>
 #include <winuser.h>
 
-namespace KeystrokeAutomation::ButtonPressHelpers {
+namespace KeystrokeAutomation {
     using std::vector;
     using std::string;
 
