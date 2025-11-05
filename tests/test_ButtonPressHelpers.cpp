@@ -1,4 +1,4 @@
-#include "..\include\catch.hpp"
+#include "catch.hpp"
 #include "..\src\KeystrokeAutomation\ButtonPressHelpers.h"
 #include "..\src\KeystrokeAutomation\VirtualKeys.h"
 #include "..\src\Utility\StringManip.h"

@@ -1,4 +1,4 @@
-#include "..\include\catch.hpp"
+#include "catch.hpp"
 #include "..\src\Utility\StringManip.h"
 #include <string>
 
