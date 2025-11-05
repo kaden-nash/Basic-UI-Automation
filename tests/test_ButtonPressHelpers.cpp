@@ -2,7 +2,7 @@
 #include "..\src\KeystrokeAutomation\ButtonPressHelpers.h"
 #include "..\src\KeystrokeAutomation\VirtualKeys.h"
 #include "..\src\Utility\StringManip.h"
-#include "winuser.h"
+#include "windows.h"
 
 TEST_CASE("Error Handling", "[errors]") {
     

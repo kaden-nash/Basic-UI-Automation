@@ -1,6 +1,6 @@
 #include <string>
 #include <vector>
-#include <winuser.h>
+#include <windows.h>
 
 namespace KeystrokeAutomation {
     using std::vector;

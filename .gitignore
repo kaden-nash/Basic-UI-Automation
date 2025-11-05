@@ -5,6 +5,7 @@
 .qodo
 build/
 build
+CMakePresets.json
 
 # Prerequisites
 *.d
