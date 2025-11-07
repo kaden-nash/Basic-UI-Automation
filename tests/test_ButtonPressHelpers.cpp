@@ -42,6 +42,7 @@ TEST_CASE("Parsing Helper Functions", "[parser_helpers]") {
 
     SECTION("isMouseMoveRequest identifies strings matching (x|y) format") {
         REQUIRE(KeystrokeAutomation::isMouseMoveRequest("(3.445|3)") == true);
+        REQUIRE(KeystrokeAutomation::isMouseMoveRequest("(3.445|3.455)") == true);
         REQUIRE(KeystrokeAutomation::isMouseMoveRequest("(|3)") == false);
         REQUIRE(KeystrokeAutomation::isMouseMoveRequest("(heafd|3)") == false);
         REQUIRE(KeystrokeAutomation::isMouseMoveRequest("") == false);
