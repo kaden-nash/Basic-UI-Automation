@@ -2,12 +2,11 @@ The input will have the following specifications:
 
 1. Any special keys will be recognized as they are found in Utility.h under virtualKeyMap.
 2. Any strings you wish to simulate, wrap them in "" (double quotation marks)
-3. Anything else will cause a crash
-4. The delimiter will be a comma
-5. If you want to enter key combinations, enter them all in within the same comma, separated by a pipe |.
+3. The delimiter will be a newline
+4. If you want to enter key combinations, enter them all in within the same comma, separated by a pipe |.
    a. Since all compound commands require simulation of a key press and not just printing a character,
       only inputs that match keys on the virtualKeyMap will be valid. Otherwise, you'll get a crash.
-6. If you want to enter a mouse movement, enter the two absolute positions wrapped in (), separated by pipe. Ex:(x|y)
+5. If you want to enter a mouse movement, enter the two absolute positions wrapped in (), separated by pipe. Ex:(x|y)
 
 Note: Compound commands cannot be performed with the mouse ... yet
 

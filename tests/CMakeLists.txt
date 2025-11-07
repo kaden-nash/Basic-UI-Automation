@@ -3,7 +3,7 @@ set(TESTING_FILES
     test_Mouse.cpp
     test_ButtonPress.cpp
     test_ButtonPressHelpers.cpp 
-    test_Utility-StringManip.cpp
+    test_StringManip.cpp
 )
 
 add_executable(Tests ${TESTING_FILES})
