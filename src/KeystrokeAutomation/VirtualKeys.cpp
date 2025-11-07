@@ -132,7 +132,19 @@ namespace KeystrokeAutomation {
         {"6", '6'},
         {"7", '7'},
         {"8", '8'},
-        {"9", '9'}
+        {"9", '9'},
+
+        {"`", VK_OEM_3},
+        {"-", VK_OEM_MINUS},
+        {"=", VK_OEM_PLUS},
+        {"[", VK_OEM_4},
+        {"]", VK_OEM_6},
+        {"\\", VK_OEM_5},
+        {";", VK_OEM_1},
+        {"'", VK_OEM_7},
+        {",", VK_OEM_COMMA},
+        {".", VK_OEM_PERIOD},
+        {"/", VK_OEM_2}
     };
     
     WORD getVirtualKey(const string& alias) {
