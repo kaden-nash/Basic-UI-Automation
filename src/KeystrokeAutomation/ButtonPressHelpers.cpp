@@ -7,6 +7,7 @@
 #include <sstream>
 #include <algorithm>
 #include <stdexcept>
+#include <regex>
 
 namespace KeystrokeAutomation {
     using std::cout;
@@ -114,11 +115,6 @@ namespace KeystrokeAutomation {
         }
     }
 
-    void throwSendInputsError(int inputsSent, int desiredInputsSent) {
-        std::stringstream errorMsg;
-        errorMsg << "Not all inputs were sent (" << std::to_string(inputsSent) << "/" << std::to_string(desiredInputsSent) << ")";
-        throw std::runtime_error(errorMsg.str());
-    }
 
     vector<INPUT> getINPUTs(const string& inputStr) {
         string strippedInput = stripWhitespace(inputStr);
@@ -134,12 +130,12 @@ namespace KeystrokeAutomation {
                 newInputs = createINPUTForMouseClick(splitInput[i]);
             } else if (isMouseMoveRequest(splitInput[i])) {
                 newInputs = createINPUTForMouseMove(splitInput[i]);
-            } else if (isPrintableVKey(splitInput[i])) {
-                newInputs = createINPUTForPrintableVKeys(splitInput[i]);
-            } else if (isCompoundCommand(splitInput[i])) {
-                newInputs = createINPUTForCompoundCommand(splitInput[i]);
+            } else if (isUnicodePrint(splitInput[i])) {
+                newInputs = createINPUTForUnicodePrint(splitInput[i]);
+            } else if (isCompoundPress(splitInput[i])) {
+                newInputs = createINPUTForCompoundPress(splitInput[i]);
             } else {
-                newInputs = createINPUTForUnprintableVKey(splitInput[i]);
+                newInputs = createINPUTForLiteralPress(splitInput[i]);
             }
 
             inputs.insert(inputs.end(), newInputs.begin(), newInputs.end());
@@ -178,9 +174,14 @@ namespace KeystrokeAutomation {
         return input;
     }
 
-    vector<INPUT> createINPUTForCompoundCommand(const string& command) {
+    vector<INPUT> createINPUTForCompoundPress(const string& command) {
         vector<string> splitCommand = split(command, "|");
-        vector<INPUT> inputs = createINPUTForHoldingPresses(splitCommand);
+        vector<INPUT> inputs;
+        try {
+            inputs = createINPUTForHoldingPresses(splitCommand);
+        } catch (std::invalid_argument& e) {
+            throwInvalidArgumentErrorToUser(command);
+        }
         return inputs;
     }
 
@@ -200,8 +201,7 @@ namespace KeystrokeAutomation {
         return input;
     }
 
-
-    vector<INPUT> createINPUTForPrintableVKeys(const string& letters) {
+    vector<INPUT> createINPUTForUnicodePrint(const string& letters) {
         string strippedLetters = removeLeadingAndTrailingChars(letters);
         vector<INPUT> inputs = {};
         for (int i = 0; i < strippedLetters.size(); ++i) {
@@ -211,9 +211,14 @@ namespace KeystrokeAutomation {
         return inputs;
     }
 
-    vector<INPUT> createINPUTForUnprintableVKey(const string& alias) {
+    vector<INPUT> createINPUTForLiteralPress(const string& alias) {
         vector<INPUT> inputs = {};
         WORD vKey = attemptToGetVKey(alias);
+        try {
+            vKey = attemptToGetVKey(alias);
+        } catch (std::invalid_argument& e) {
+            throwInvalidArgumentErrorToUser(alias);
+        }
         inputs.push_back(populateINPUTForPress(vKey));
         inputs.push_back(populateINPUTForRelease(vKey));
         return inputs;
@@ -221,14 +226,7 @@ namespace KeystrokeAutomation {
 
     WORD attemptToGetVKey(const string& alias) {
         string lower = toLower(alias);
-
-        WORD vKey;
-        try {
-            vKey = getVirtualKey(lower);
-        } catch (const std::invalid_argument) {
-            std::throw_with_nested(std::runtime_error("Invalid input."));
-        }
-
+        WORD vKey = getVirtualKey(lower);
         return vKey;
     }
 
@@ -239,15 +237,36 @@ namespace KeystrokeAutomation {
         return copy;
     }
     
-    bool isCompoundCommand(const string& command) {
-        return command.find("|") != string::npos;
+    bool isCompoundPress(const string& command) {
+        return command.find("|") != string::npos && !isMouseMoveRequest(command); 
     }
 
-    bool isPrintableVKey(const string& str) {
+    bool isUnicodePrint(const string& str) {
         return str[0] == '\"' && str[str.size() - 1] == '\"';
     }
 
     bool isMouseMoveRequest(const string& str) {
-        return str[0] == '(' && str[str.size() - 1] == ')';
+        std::regex movePattern(R"(^\((\d+(\.\d+)?)\|(\d+(\.\d+)?)\)$)");
+        std::smatch matches;
+        std::regex_match(str, matches, movePattern);
+        int numMatchesExpected = 5;
+        if(matches.size() != numMatchesExpected) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    void throwSendInputsError(int inputsSent, int desiredInputsSent) {
+        std::stringstream errorMsg;
+        errorMsg << "Not all inputs were sent (" << std::to_string(inputsSent) << "/" << std::to_string(desiredInputsSent) << ")";
+        throw std::runtime_error(errorMsg.str());
+    }
+
+    void throwInvalidArgumentErrorToUser(const string& problematicStr) {
+        string errorMsg = "";
+        errorMsg += "Invalid keypress requested: ";
+        errorMsg += problematicStr;
+        std::throw_with_nested(std::invalid_argument(errorMsg));
     }
 }

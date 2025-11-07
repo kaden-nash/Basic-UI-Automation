@@ -22,20 +22,22 @@ TEST_CASE("Error Handling", "[errors]") {
 
 TEST_CASE("Parsing Helper Functions", "[parser_helpers]") {
 
-    SECTION("isCompoundCommand identifies commands with a pipe") {
-        REQUIRE(KeystrokeAutomation::isCompoundCommand("ctrl|shift") == true);
-        REQUIRE(KeystrokeAutomation::isCompoundCommand("ctrl | shift") == true);
-        REQUIRE(KeystrokeAutomation::isCompoundCommand("ctrl") == false);
-        REQUIRE(KeystrokeAutomation::isCompoundCommand("") == false);
+    SECTION("isCompoundPress identifies commands with a pipe") {
+        REQUIRE(KeystrokeAutomation::isCompoundPress("ctrl|shift") == true);
+        REQUIRE(KeystrokeAutomation::isCompoundPress("ctrl | shift") == true);
+        REQUIRE(KeystrokeAutomation::isCompoundPress("ctrl") == false);
+        REQUIRE(KeystrokeAutomation::isCompoundPress("ctrl|") == true);
+        REQUIRE(KeystrokeAutomation::isCompoundPress("|ctrl") == true);
+        REQUIRE(KeystrokeAutomation::isCompoundPress("") == false);
     }
 
-    SECTION("isPrintableVKey identifies quoted strings") {
-        REQUIRE(KeystrokeAutomation::isPrintableVKey("\"hello\"") == true);
-        REQUIRE(KeystrokeAutomation::isPrintableVKey("\"\"") == true);
-        REQUIRE(KeystrokeAutomation::isPrintableVKey("hello") == false);
-        REQUIRE(KeystrokeAutomation::isPrintableVKey("\"hello") == false);
-        REQUIRE(KeystrokeAutomation::isPrintableVKey("hello\"") == false);
-        REQUIRE(KeystrokeAutomation::isPrintableVKey("") == false);
+    SECTION("isUnicodePrint identifies quoted strings") {
+        REQUIRE(KeystrokeAutomation::isUnicodePrint("\"hello\"") == true);
+        REQUIRE(KeystrokeAutomation::isUnicodePrint("\"\"") == true);
+        REQUIRE(KeystrokeAutomation::isUnicodePrint("hello") == false);
+        REQUIRE(KeystrokeAutomation::isUnicodePrint("\"hello") == false);
+        REQUIRE(KeystrokeAutomation::isUnicodePrint("hello\"") == false);
+        REQUIRE(KeystrokeAutomation::isUnicodePrint("") == false);
     }
 
     SECTION("removeLeadingAndTrailingChars strips outer quotes") {
@@ -47,8 +49,8 @@ TEST_CASE("Parsing Helper Functions", "[parser_helpers]") {
 
 TEST_CASE("Input Creation Logic", "[input_creation]") {
 
-    SECTION("createINPUTForUnprintableVKey creates a press and release pair") {
-        auto inputs = KeystrokeAutomation::createINPUTForUnprintableVKey("shift");
+    SECTION("createINPUTForLiteralPress creates a press and release pair") {
+        auto inputs = KeystrokeAutomation::createINPUTForLiteralPress("shift");
         REQUIRE(inputs.size() == 2);
         REQUIRE(inputs[0].type == INPUT_KEYBOARD); 
         REQUIRE(inputs[0].ki.wVk == VK_SHIFT);
@@ -56,8 +58,8 @@ TEST_CASE("Input Creation Logic", "[input_creation]") {
         REQUIRE(inputs[1].ki.wVk == VK_SHIFT);
     }
 
-    SECTION("createINPUTForPrintableVKeys creates pairs for each character") {
-        auto inputs = KeystrokeAutomation::createINPUTForPrintableVKeys("\"hi\"");
+    SECTION("createINPUTForUnicodePrint creates pairs for each character") {
+        auto inputs = KeystrokeAutomation::createINPUTForUnicodePrint("\"hi\"");
         REQUIRE(inputs.size() == 4);
         REQUIRE(inputs[0].ki.wScan == 'h');
         REQUIRE(inputs[1].ki.wScan == 'h');
