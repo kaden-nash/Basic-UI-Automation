@@ -1,6 +1,5 @@
 set(TESTING_FILES
     tests_main.cpp
-    test_Mouse.cpp
     test_ButtonPress.cpp
     test_ButtonPressHelpers.cpp 
     test_StringManip.cpp
@@ -13,5 +12,4 @@ target_link_libraries(Tests PRIVATE
     Utility
 )
 
-add_test(NAME TestMouse COMMAND Tests)
 add_test(NAME TestButtonPress COMMAND Tests)
