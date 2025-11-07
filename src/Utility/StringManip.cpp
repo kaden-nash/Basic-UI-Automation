@@ -9,7 +9,10 @@ namespace Utility {
 
     string toLower(const string& s) {
         string copy = s;
-        std::transform(copy.begin(), copy.end(), copy.begin(), ::tolower);
+        std::transform(copy.begin(), copy.end(), copy.begin(), 
+            [](unsigned char c) {
+                return ::tolower(c);
+        });
         return copy;
     }
 

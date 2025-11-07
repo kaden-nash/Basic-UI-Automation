@@ -157,10 +157,6 @@ namespace KeystrokeAutomation {
     }
 
     bool isMouseClickRequest(const string& alias) {
-        WORD vKey;
-        try {
-            vKey = getVirtualKey(alias);
-        } catch (const std::invalid_argument& e) {}
-        return vKey == VK_LBUTTON || vKey == VK_RBUTTON || vKey == VK_MBUTTON;
+        return alias == "lmouse" || alias == "rmouse" || alias == "mmouse";
     }
 }

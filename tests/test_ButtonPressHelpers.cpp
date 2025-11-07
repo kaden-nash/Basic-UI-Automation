@@ -31,13 +31,31 @@ TEST_CASE("Parsing Helper Functions", "[parser_helpers]") {
         REQUIRE(KeystrokeAutomation::isCompoundPress("") == false);
     }
 
-    SECTION("isUnicodePrint identifies quoted strings") {
-        REQUIRE(KeystrokeAutomation::isUnicodePrint("\"hello\"") == true);
-        REQUIRE(KeystrokeAutomation::isUnicodePrint("\"\"") == true);
-        REQUIRE(KeystrokeAutomation::isUnicodePrint("hello") == false);
-        REQUIRE(KeystrokeAutomation::isUnicodePrint("\"hello") == false);
-        REQUIRE(KeystrokeAutomation::isUnicodePrint("hello\"") == false);
-        REQUIRE(KeystrokeAutomation::isUnicodePrint("") == false);
+    SECTION("isUnicodePrintRequest identifies quoted strings") {
+        REQUIRE(KeystrokeAutomation::isUnicodePrintRequest("\"hello\"") == true);
+        REQUIRE(KeystrokeAutomation::isUnicodePrintRequest("\"\"") == true);
+        REQUIRE(KeystrokeAutomation::isUnicodePrintRequest("hello") == false);
+        REQUIRE(KeystrokeAutomation::isUnicodePrintRequest("\"hello") == false);
+        REQUIRE(KeystrokeAutomation::isUnicodePrintRequest("hello\"") == false);
+        REQUIRE(KeystrokeAutomation::isUnicodePrintRequest("") == false);
+    }
+
+    SECTION("isMouseMoveRequest identifies strings matching (x|y) format") {
+        REQUIRE(KeystrokeAutomation::isMouseMoveRequest("(3.445|3)") == true);
+        REQUIRE(KeystrokeAutomation::isMouseMoveRequest("(|3)") == false);
+        REQUIRE(KeystrokeAutomation::isMouseMoveRequest("(heafd|3)") == false);
+        REQUIRE(KeystrokeAutomation::isMouseMoveRequest("") == false);
+        REQUIRE(KeystrokeAutomation::isMouseMoveRequest("(3|)") == false);
+        REQUIRE(KeystrokeAutomation::isMouseMoveRequest("|)") == false);
+        REQUIRE(KeystrokeAutomation::isMouseMoveRequest("(|") == false);
+    }
+
+    SECTION("isMouseClickRequest identifies strings with key values matching mouse click options") {
+        REQUIRE(KeystrokeAutomation::isMouseClickRequest("lmouse") == true);
+        REQUIRE(KeystrokeAutomation::isMouseClickRequest("rmouse") == true);
+        REQUIRE(KeystrokeAutomation::isMouseClickRequest("mmouse") == true);
+        REQUIRE(KeystrokeAutomation::isMouseClickRequest("mouse") == false);
+        REQUIRE(KeystrokeAutomation::isMouseClickRequest("") == false);
     }
 
     SECTION("removeLeadingAndTrailingChars strips outer quotes") {
@@ -56,6 +74,10 @@ TEST_CASE("Input Creation Logic", "[input_creation]") {
         REQUIRE(inputs[0].ki.wVk == VK_SHIFT);
         REQUIRE(inputs[1].type == INPUT_KEYBOARD); 
         REQUIRE(inputs[1].ki.wVk == VK_SHIFT);
+    }
+
+    SECTION("createINPUTForLiteralPress receives an invalid alias") {
+        REQUIRE_THROWS_WITH(KeystrokeAutomation::createINPUTForLiteralPress("fead"), "Invalid keypress requested: fead");
     }
 
     SECTION("createINPUTForUnicodePrint creates pairs for each character") {
@@ -93,9 +115,9 @@ TEST_CASE("Input Creation Logic", "[input_creation]") {
         );
     }
 
-    SECTION("createINPUTForHoldingPresses") {
+    SECTION("createINPUTForCompoundPressHelper") {
         std::vector<std::string> aliases = {"ctrl", "shift"};
-        auto inputs = KeystrokeAutomation::createINPUTForHoldingPresses(aliases);
+        auto inputs = KeystrokeAutomation::createINPUTForCompoundPressHelper(aliases);
         
         REQUIRE(inputs.size() == 4);
         REQUIRE(inputs[0].type == INPUT_KEYBOARD);

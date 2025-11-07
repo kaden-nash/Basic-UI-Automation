@@ -39,7 +39,6 @@ namespace KeystrokeAutomation {
             return input;
         }
 
-        
         INPUT populateINPUTForLeftClick() {
             INPUT input = {};
             input.type = INPUT_MOUSE;
@@ -115,7 +114,6 @@ namespace KeystrokeAutomation {
         }
     }
 
-
     vector<INPUT> getINPUTs(const string& inputStr) {
         string strippedInput = stripWhitespace(inputStr);
         vector<string> splitInput = split(strippedInput, ",");
@@ -130,7 +128,7 @@ namespace KeystrokeAutomation {
                 newInputs = createINPUTForMouseClick(splitInput[i]);
             } else if (isMouseMoveRequest(splitInput[i])) {
                 newInputs = createINPUTForMouseMove(splitInput[i]);
-            } else if (isUnicodePrint(splitInput[i])) {
+            } else if (isUnicodePrintRequest(splitInput[i])) {
                 newInputs = createINPUTForUnicodePrint(splitInput[i]);
             } else if (isCompoundPress(splitInput[i])) {
                 newInputs = createINPUTForCompoundPress(splitInput[i]);
@@ -142,7 +140,6 @@ namespace KeystrokeAutomation {
         }
         return inputs;
     }
-
 
     vector<INPUT> createINPUTForMouseClick(const string& alias) {
         WORD vKey = attemptToGetVKey(alias);
@@ -174,18 +171,28 @@ namespace KeystrokeAutomation {
         return input;
     }
 
+    vector<INPUT> createINPUTForUnicodePrint(const string& letters) {
+        string strippedLetters = removeLeadingAndTrailingChars(letters);
+        vector<INPUT> inputs = {};
+        for (int i = 0; i < strippedLetters.size(); ++i) {
+            inputs.push_back(populateINPUTForPress(strippedLetters[i]));
+            inputs.push_back(populateINPUTForRelease(strippedLetters[i]));
+        }
+        return inputs;
+    }
+
     vector<INPUT> createINPUTForCompoundPress(const string& command) {
         vector<string> splitCommand = split(command, "|");
         vector<INPUT> inputs;
         try {
-            inputs = createINPUTForHoldingPresses(splitCommand);
+            inputs = createINPUTForCompoundPressHelper(splitCommand);
         } catch (std::invalid_argument& e) {
             throwInvalidArgumentErrorToUser(command);
         }
         return inputs;
     }
 
-    vector<INPUT> createINPUTForHoldingPresses(vector<string>& aliases) {
+    vector<INPUT> createINPUTForCompoundPressHelper(vector<string>& aliases) {
         vector<INPUT> input = {};
         WORD vKey;
         for(int i = 0; i < aliases.size(); ++i) {
@@ -201,19 +208,9 @@ namespace KeystrokeAutomation {
         return input;
     }
 
-    vector<INPUT> createINPUTForUnicodePrint(const string& letters) {
-        string strippedLetters = removeLeadingAndTrailingChars(letters);
-        vector<INPUT> inputs = {};
-        for (int i = 0; i < strippedLetters.size(); ++i) {
-            inputs.push_back(populateINPUTForPress(strippedLetters[i]));
-            inputs.push_back(populateINPUTForRelease(strippedLetters[i]));
-        }
-        return inputs;
-    }
-
     vector<INPUT> createINPUTForLiteralPress(const string& alias) {
         vector<INPUT> inputs = {};
-        WORD vKey = attemptToGetVKey(alias);
+        WORD vKey;
         try {
             vKey = attemptToGetVKey(alias);
         } catch (std::invalid_argument& e) {
@@ -241,7 +238,7 @@ namespace KeystrokeAutomation {
         return command.find("|") != string::npos && !isMouseMoveRequest(command); 
     }
 
-    bool isUnicodePrint(const string& str) {
+    bool isUnicodePrintRequest(const string& str) {
         return str[0] == '\"' && str[str.size() - 1] == '\"';
     }
 
@@ -264,8 +261,7 @@ namespace KeystrokeAutomation {
     }
 
     void throwInvalidArgumentErrorToUser(const string& problematicStr) {
-        string errorMsg = "";
-        errorMsg += "Invalid keypress requested: ";
+        string errorMsg = "Invalid keypress requested: ";
         errorMsg += problematicStr;
         std::throw_with_nested(std::invalid_argument(errorMsg));
     }
